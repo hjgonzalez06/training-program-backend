@@ -30,6 +30,7 @@
   "dependencies": {
     "@graphql-tools/schema": "^7.1.2",
     "apollo-server-express": "^2.19.0",
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "cls-hooked": "^4.2.2",
     "cors": "^2.8.5",
