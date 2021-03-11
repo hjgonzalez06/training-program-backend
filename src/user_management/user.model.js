@@ -22,8 +22,7 @@ export default (sequelize, DataTypes) => {
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
-      
+      allowNull: false
     }
   })
 
@@ -32,8 +31,13 @@ export default (sequelize, DataTypes) => {
     user.password = await bcrypt.hash(user.password, salt)
   })
 
-  User.prototype.validatePass = async function (password) {
-    return await bcrypt.compare(password, this.password)
+  User.addHook('beforeUpdate', async (user, options) => {
+    const salt = await bcrypt.genSalt(10)
+    user.password = await bcrypt.hash(user.password, salt)
+  })
+
+  User.prototype.validatePassword = async function (password) {
+    return bcrypt.compare(password, this.password)
   }
 
   return User
