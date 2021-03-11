@@ -7,16 +7,13 @@ export default {
     users: (_,args) => {
       return models.user.findAll()
     },
-    currentUser: {
-
-    },
     logInUser: async (_,{email, password}) => {
       const user = await models.user.findOne({
         where: {
           email
         }
       }) 
-      if (user && await user.validatePass(password)){
+      if (await user?.validatePassword(password)){
         return user
       }
       throw new AuthenticationError('Invalid credentials')
@@ -24,13 +21,20 @@ export default {
   },
   Mutation: {
     createUser: async (_,{input}) => {
-      const response = await models.user.create({
+      const user = await models.user.create({
         firstName: input.firstName,
         lastName: input.lastName,
         email: input.email,
         password: input.password
       })
-      return response
+      if (user) {
+        return {
+          code: 'OK',
+          success: true,
+          message: 'User created successfully',
+          user
+        }
+      }
     }
   }
 }
