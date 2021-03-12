@@ -7,6 +7,9 @@ export default {
     users: (_,args) => {
       return models.user.findAll()
     },
+    currentUser: (_,args) => {
+      return models.user.findOne()
+    },
     logInUser: async (_,{email, password}) => {
       const user = await models.user.findOne({
         where: {
