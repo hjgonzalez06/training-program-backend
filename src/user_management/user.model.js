@@ -26,14 +26,17 @@ export default (sequelize, DataTypes) => {
     }
   })
 
-  User.addHook('beforeCreate', async (user, options) => {
+  const hashPassword = async user => {
     const salt = await bcrypt.genSalt(10)
     user.password = await bcrypt.hash(user.password, salt)
+  }
+
+  User.addHook('beforeCreate', async (user, options) => {
+    await hashPassword(user)
   })
 
   User.addHook('beforeUpdate', async (user, options) => {
-    const salt = await bcrypt.genSalt(10)
-    user.password = await bcrypt.hash(user.password, salt)
+    await hashPassword(user)
   })
 
   User.prototype.validatePassword = async function (password) {
