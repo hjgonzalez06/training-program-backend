@@ -1,6 +1,8 @@
 import { AuthenticationError } from 'apollo-server-express'
 
 import models from '~/src/service_providers/sequelize/models'
+import generateToken from '~/src/service_providers/authentication/generate_token'
+import setAccessToken from '~/src/service_providers/authentication/set_access_token'
 
 export default {
   Query: {
@@ -17,6 +19,7 @@ export default {
         }
       }) 
       if (await user?.validatePassword(password)){
+        setAccessToken(generateToken(user.id))
         return user
       }
       throw new AuthenticationError('Invalid credentials')
@@ -31,6 +34,7 @@ export default {
         password: input.password
       })
       if (user) {
+        setAccessToken(generateToken(user.id))
         return {
           code: 'OK',
           success: true,
