@@ -4,9 +4,12 @@ import getRequestHeader from '~/src/service_providers/http/get_request_header'
 export default (req, res, next) => {
   const authorizationHeaderValue = getRequestHeader('Authorization')
 
-  // TODO: extract the token from the Authorization header value
-  const token = ''
+  try{
+    const token = authorizationHeaderValue.replace('Bearer ','')
+    setAccessToken(token)
+  } catch (e) {
+    console.log('Access token is undefined')
+  }
 
-  setAccessToken(token)
   next()
 }

@@ -3,13 +3,15 @@ import { AuthenticationError } from 'apollo-server-express'
 import models from '~/src/service_providers/sequelize/models'
 import generateToken from '~/src/service_providers/authentication/generate_token'
 import setAccessToken from '~/src/service_providers/authentication/set_access_token'
+import getDecodedAccessToken from '~/src/service_providers/authentication/get_decoded_access_token'
 
 export default {
   Query: {
     users: (_,args) => {
       return models.user.findAll()
     },
-    currentUser: (_,args) => {
+    currentUser: async (_,args) => {
+      console.log(await getDecodedAccessToken())
       return models.user.findOne()
     },
     logInUser: async (_,{email, password}) => {
